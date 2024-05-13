@@ -13,14 +13,14 @@ import csv
 ######## NOTE: you must have a labels dataframe that matches the length of the newly split columns dataframe or the function, 
 ######## or compiler itself will throw an error
 
-def csvmod(file,sep,col_to_split,split_delim,labels):
+
+def csvmod(file,sep,col_to_split,split_delim):
     file_to_change= pd.read_csv(file,sep=sep,header=0)
-    split_cols = file_to_change[col_to_split].str.split(split_delim,expand=True)
-    if len(split_cols) != len(labels):
-        print('Error: mismatched size of label to column frame')
-    else: pass
+    split_cols = file_to_change[col_to_split].str.split(split_delim)
+    exploded_csv = split_cols.explode()
     file_drop = file_to_change.drop([col_to_split],axis=1)
-    new_file = split_cols.set_axis(labels, axis='columns')
-    altered_df = file_drop.join(new_file)
+    altered_df = file_drop.join(exploded_csv)
+   
+    return altered_df
    
     return altered_df
